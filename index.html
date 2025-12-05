@@ -65,67 +65,7 @@
             </div>
         </div>
 
-        <!-- FORM NUOVA SESSIONE -->
-        <div
-            class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 p-4 sm:p-6 mb-6 sm:mb-8 border border-slate-200/50">
-            <h2 class="text-lg sm:text-xl font-bold text-slate-800 mb-4 sm:mb-5 flex items-center gap-2">
-                <span class="w-1.5 h-5 sm:h-6 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></span>
-                Nuova Sessione
-            </h2>
-            <form @submit.prevent="createSession" class="space-y-4 sm:space-y-5">
-                <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5 sm:mb-2">Data</label>
-                        <input type="date" x-model="form.date"
-                            class="w-full border-2 border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5 sm:mb-2">Ora</label>
-                        <input type="time" x-model="form.time"
-                            class="w-full border-2 border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
-                    </div>
-                </div>
 
-                <div class="grid grid-cols-3 gap-2 sm:gap-4">
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5 sm:mb-2">Peso
-                            (kg)</label>
-                        <input type="number" step="0.1" x-model="form.weight"
-                            class="w-full border-2 border-slate-200 rounded-xl px-2 sm:px-4 py-2 sm:py-2.5 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
-                    </div>
-                    <div>
-                        <label
-                            class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5 sm:mb-2">Energia</label>
-                        <input type="number" min="1" max="5" x-model="form.energy"
-                            class="w-full border-2 border-slate-200 rounded-xl px-2 sm:px-4 py-2 sm:py-2.5 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
-                    </div>
-                    <div>
-                        <label
-                            class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5 sm:mb-2">Stress</label>
-                        <input type="number" min="1" max="5" x-model="form.stress"
-                            class="w-full border-2 border-slate-200 rounded-xl px-2 sm:px-4 py-2 sm:py-2.5 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5 sm:mb-2">Note</label>
-                    <textarea x-model="form.notes"
-                        class="w-full border-2 border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none resize-none"
-                        rows="3" placeholder="Aggiungi eventuali osservazioni..."></textarea>
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                    <button type="submit"
-                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
-                        :disabled="loading">
-                        <span x-show="!loading">💾 Salva sessione</span>
-                        <span x-show="loading">⏳ Salvataggio…</span>
-                    </button>
-                    <span x-show="errorMessage" x-text="errorMessage"
-                        class="text-xs sm:text-sm text-red-600 font-medium bg-red-50 px-3 py-2 rounded-lg text-center"></span>
-                </div>
-            </form>
-        </div>
 
         <!-- LISTA SESSIONI -->
         <div
@@ -173,8 +113,9 @@
                             <template x-for="s in paginatedSessions()" :key="s.id">
                                 <tr class="border-b border-slate-100 hover:bg-blue-50/50 transition-colors">
                                     <td class="px-4 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-semibold text-slate-800"
-                                            x-text="formatDateTime(s.date, s.time)"></div>
+                                        <a :href="'sessione.html?id=' + s.id"
+                                            class="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+                                            x-text="formatDateTime(s.date, s.time)"></a>
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap">
                                         <span
@@ -233,18 +174,7 @@
             const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
             return {
-                loading: false,
-                errorMessage: '',
-                page: 1,
-                pageSize: 10,
-                form: {
-                    date: '',
-                    time: '',
-                    weight: '',
-                    energy: 3,
-                    stress: 3,
-                    notes: ''
-                },
+
                 sessions: [],
                 async loadSessions() {
                     this.errorMessage = '';
@@ -261,36 +191,7 @@
                     this.sessions = data || [];
                     this.updateChart();
                 },
-                async createSession() {
-                    this.loading = true;
-                    this.errorMessage = '';
-                    const now = new Date();
-                    if (!this.form.date) this.form.date = now.toISOString().slice(0, 10);
-                    if (!this.form.time) this.form.time = now.toTimeString().slice(0, 5);
-                    const { error } = await supabase
-                        .from('sessions')
-                        .insert({
-                            date: this.form.date,
-                            time: this.form.time,
-                            weight: this.form.weight ? Number(this.form.weight) : null,
-                            energy: this.form.energy ? Number(this.form.energy) : null,
-                            stress: this.form.stress ? Number(this.form.stress) : null,
-                            umore: null,
-                            sleep_time: null,
-                            cycle_day: null,
-                            cycle_phase: null,
-                            notes: this.form.notes || null,
-                        });
-                    if (error) {
-                        console.error(error);
-                        this.errorMessage = 'Errore nel salvataggio';
-                    } else {
-                        const savedDate = this.form.date;
-                        this.form = { date: savedDate, time: '', weight: '', energy: 3, stress: 3, notes: '' };
-                        await this.loadSessions();
-                    }
-                    this.loading = false;
-                },
+
                 formatDateTime(dateStr, timeStr) {
                     if (!dateStr) return '';
                     const d = new Date(dateStr + 'T' + (timeStr || '00:00'));

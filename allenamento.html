@@ -24,7 +24,7 @@
             x-show="!sessionId">
             <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                 <span class="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></span>
-                1. Dettagli Sessione
+                1. Prima di cominciare
             </h2>
             <form @submit.prevent="createSession" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
@@ -39,38 +39,98 @@
                             class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-4">
+
+                <div>
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Peso (kg) *</label>
+                    <input type="number" step="0.1" x-model="form.weight"
+                        class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-base focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
+                        placeholder="0.0">
+                </div>
+
+                <div class="space-y-6 pt-2">
+                    <!-- Energy -->
                     <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Peso (kg)</label>
-                        <input type="number" step="0.1" x-model="form.weight"
-                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                        <div class="flex items-center gap-2 mb-3">
+                            <label class="block text-sm font-bold text-slate-700">Energia (1–5) *</label>
+                            <div class="group relative flex items-center">
+                                <span class="cursor-help text-slate-400 hover:text-blue-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                        class="w-5 h-5">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                <div
+                                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-3 bg-slate-800 text-white text-xs rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-center shadow-xl z-10 pointer-events-none">
+                                    Quanta energia senti oggi?
+                                    <div
+                                        class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <template x-for="i in 5" :key="i">
+                                <button type="button" @click="form.energy = i"
+                                    :class="form.energy === i ? 'bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-600 ring-offset-2' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'"
+                                    class="flex-1 h-14 rounded-2xl text-lg font-bold transition-all duration-200 flex items-center justify-center"
+                                    x-text="i">
+                                </button>
+                            </template>
+                        </div>
                     </div>
+
+                    <!-- Stress -->
                     <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Energia
-                            (1–5)</label>
-                        <input type="number" min="1" max="5" x-model="form.energy"
-                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Stress (1–5)</label>
-                        <input type="number" min="1" max="5" x-model="form.stress"
-                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                        <div class="flex items-center gap-2 mb-3">
+                            <label class="block text-sm font-bold text-slate-700">Stress (1–5) *</label>
+                            <div class="group relative flex items-center">
+                                <span class="cursor-help text-slate-400 hover:text-blue-500 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                        class="w-5 h-5">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                <div
+                                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-3 bg-slate-800 text-white text-xs rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-center shadow-xl z-10 pointer-events-none">
+                                    Il tuo livello di stress percepito
+                                    <div
+                                        class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <template x-for="i in 5" :key="i">
+                                <button type="button" @click="form.stress = i"
+                                    :class="form.stress === i ? 'bg-indigo-600 text-white shadow-lg scale-105 ring-2 ring-indigo-600 ring-offset-2' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-indigo-50'"
+                                    class="flex-1 h-14 rounded-2xl text-lg font-bold transition-all duration-200 flex items-center justify-center"
+                                    x-text="i">
+                                </button>
+                            </template>
+                        </div>
                     </div>
                 </div>
+
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Note</label>
                     <textarea x-model="form.notes"
-                        class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none resize-none"
-                        rows="2"></textarea>
+                        class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none resize-none"
+                        rows="3" placeholder="Come ti senti oggi?"></textarea>
                 </div>
-                <div class="flex items-center gap-3 pt-2">
+
+                <div class="pt-4">
                     <button type="submit"
-                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
+                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 rounded-2xl text-base font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
                         :disabled="loading">
                         <span x-show="!loading">Inizia Sessione</span>
                         <span x-show="loading">Creazione...</span>
                     </button>
-                    <span x-text="errorMessage" class="text-sm text-red-600 font-medium"></span>
+                    <p x-show="errorMessage" x-text="errorMessage"
+                        class="text-sm text-red-600 font-medium mt-2 text-center"></p>
                 </div>
             </form>
         </div>
@@ -184,17 +244,16 @@
                         </div>
                     </div>
 
-                    <!-- SCALES 1-5 -->
-                    <div class="space-y-4 pt-2">
+                    <!-- SCALES 0-5 -->
+                    <div class="space-y-6 pt-4">
                         <!-- Stimulus -->
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Stimolo
-                                (0-5)</label>
-                            <div class="flex gap-2">
+                            <label class="block text-sm font-bold text-slate-700 mb-3">Stimolo (0-5) *</label>
+                            <div class="flex gap-1 sm:gap-2">
                                 <template x-for="i in 6" :key="i">
                                     <button type="button" @click="exerciseForm.stimulus = (i-1)"
-                                        :class="exerciseForm.stimulus === (i-1) ? 'bg-blue-600 text-white shadow-md scale-110' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center"
+                                        :class="exerciseForm.stimulus === (i-1) ? 'bg-blue-600 text-white shadow-lg scale-105 ring-2 ring-blue-600 ring-offset-2' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50'"
+                                        class="flex-1 h-12 sm:h-14 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center"
                                         x-text="i-1">
                                     </button>
                                 </template>
@@ -202,13 +261,12 @@
                         </div>
                         <!-- Fatigue -->
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Fatica
-                                (0-5)</label>
-                            <div class="flex gap-2">
+                            <label class="block text-sm font-bold text-slate-700 mb-3">Fatica (0-5) *</label>
+                            <div class="flex gap-1 sm:gap-2">
                                 <template x-for="i in 6" :key="i">
                                     <button type="button" @click="exerciseForm.fatigue = (i-1)"
-                                        :class="exerciseForm.fatigue === (i-1) ? 'bg-orange-500 text-white shadow-md scale-110' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center"
+                                        :class="exerciseForm.fatigue === (i-1) ? 'bg-orange-500 text-white shadow-lg scale-105 ring-2 ring-orange-500 ring-offset-2' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-orange-300 hover:bg-orange-50'"
+                                        class="flex-1 h-12 sm:h-14 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center"
                                         x-text="i-1">
                                     </button>
                                 </template>
@@ -216,13 +274,12 @@
                         </div>
                         <!-- Soreness -->
                         <div>
-                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Dolore
-                                (0-5)</label>
-                            <div class="flex gap-2">
+                            <label class="block text-sm font-bold text-slate-700 mb-3">Dolore (0-5) *</label>
+                            <div class="flex gap-1 sm:gap-2">
                                 <template x-for="i in 6" :key="i">
                                     <button type="button" @click="exerciseForm.soreness = (i-1)"
-                                        :class="exerciseForm.soreness === (i-1) ? 'bg-red-500 text-white shadow-md scale-110' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center"
+                                        :class="exerciseForm.soreness === (i-1) ? 'bg-red-500 text-white shadow-lg scale-105 ring-2 ring-red-500 ring-offset-2' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50'"
+                                        class="flex-1 h-12 sm:h-14 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center"
                                         x-text="i-1">
                                     </button>
                                 </template>
@@ -354,6 +411,23 @@
                     const savedSessionId = localStorage.getItem('activeSessionId');
                     if (savedSessionId) {
                         await this.restoreSession(savedSessionId);
+                    } else {
+                        // Se non c'è sessione attiva, cerca l'ultimo peso registrato
+                        await this.loadLastWeight();
+                    }
+                },
+
+                async loadLastWeight() {
+                    const { data, error } = await supabase
+                        .from('sessions')
+                        .select('weight')
+                        .not('weight', 'is', null)
+                        .order('date', { ascending: false })
+                        .limit(1)
+                        .single();
+
+                    if (!error && data) {
+                        this.form.weight = data.weight;
                     }
                 },
 
@@ -369,6 +443,8 @@
                         // Session not found or error (maybe deleted), clear storage
                         console.warn('Saved session not found, clearing storage');
                         localStorage.removeItem('activeSessionId');
+                        // Prova a caricare l'ultimo peso se il restore fallisce
+                        await this.loadLastWeight();
                     } else {
                         // Restore session state
                         this.sessionId = data.id;
@@ -431,17 +507,32 @@
                 },
 
                 async createSession() {
-                    this.loading = true;
                     this.errorMessage = '';
+
+                    // Validazione campi obbligatori
+                    if (!this.form.weight) {
+                        this.errorMessage = 'Inserisci il peso corporeo.';
+                        return;
+                    }
+                    if (this.form.energy === null) {
+                        this.errorMessage = 'Seleziona il livello di energia.';
+                        return;
+                    }
+                    if (this.form.stress === null) {
+                        this.errorMessage = 'Seleziona il livello di stress.';
+                        return;
+                    }
+
+                    this.loading = true;
 
                     const { data, error } = await supabase
                         .from('sessions')
                         .insert({
                             date: this.form.date,
                             time: this.form.time,
-                            weight: this.form.weight ? Number(this.form.weight) : null,
-                            energy: this.form.energy ? Number(this.form.energy) : null,
-                            stress: this.form.stress ? Number(this.form.stress) : null,
+                            weight: Number(this.form.weight),
+                            energy: Number(this.form.energy),
+                            stress: Number(this.form.stress),
                             notes: this.form.notes || null,
                         })
                         .select();
@@ -461,6 +552,12 @@
                     if (!this.sessionId) return;
                     if (!this.exerciseForm.exercise_name) {
                         alert('Seleziona un esercizio');
+                        return;
+                    }
+
+                    // Validazione feedback obbligatori
+                    if (this.exerciseForm.stimulus === null || this.exerciseForm.fatigue === null || this.exerciseForm.soreness === null) {
+                        alert('Compila tutti i feedback (Stimolo, Fatica, Dolore) prima di salvare.');
                         return;
                     }
 
