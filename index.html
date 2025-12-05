@@ -120,8 +120,10 @@
                             <template x-for="s in paginatedSessions()" :key="s.id">
                                 <tr>
                                     <td class="px-3 py-2 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900"
-                                            x-text="formatDateTime(s.date, s.time)"></div>
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <a :href="'sessione.html?id=' + s.id" class="text-blue-600 hover:underline"
+                                                x-text="formatDateTime(s.date, s.time)"></a>
+                                        </div>
                                     </td>
                                     <td class="px-3 py-2 whitespace-nowrap">
                                         <div class="text-sm text-gray-900" x-text="s.weight ? s.weight + ' kg' : '-'">
