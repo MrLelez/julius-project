@@ -10,26 +10,33 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 
-<body class="bg-slate-100 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
     <div class="max-w-4xl mx-auto py-8 px-4" x-data="exercisesApp()" x-init="loadExercises()">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Gestione Esercizi</h1>
-            <a href="index.html" class="text-blue-600 hover:underline text-sm">← Torna alla home</a>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Gestione Esercizi</h1>
+            <a href="index.html"
+                class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium transition-colors">← Torna
+                alla home</a>
         </div>
 
         <!-- FORM NUOVO ESERCIZIO -->
-        <div class="bg-white rounded-xl shadow p-4 mb-6">
-            <h2 class="font-semibold mb-3">Aggiungi nuovo esercizio</h2>
-            <form @submit.prevent="createExercise" class="space-y-3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div
+            class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 p-4 sm:p-6 mb-6 border border-slate-200/50">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span class="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></span>
+                Aggiungi nuovo esercizio
+            </h2>
+            <form @submit.prevent="createExercise" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Nome *</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Nome *</label>
                         <input type="text" x-model="form.name" required
-                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Area</label>
-                        <select x-model="form.area" class="mt-1 w-full border rounded px-2 py-1 text-sm bg-white">
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Area</label>
+                        <select x-model="form.area"
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                             <option value="">-- Seleziona --</option>
                             <option value="Gambe">Gambe</option>
                             <option value="Glutei">Glutei</option>
@@ -42,8 +49,9 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Tipo</label>
-                        <select x-model="form.tipo" class="mt-1 w-full border rounded px-2 py-1 text-sm bg-white">
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Tipo</label>
+                        <select x-model="form.tipo"
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                             <option value="">-- Seleziona --</option>
                             <option value="Forza">Forza</option>
                             <option value="Ipertrofia">Ipertrofia</option>
@@ -54,8 +62,9 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Zona</label>
-                        <select x-model="form.zona" class="mt-1 w-full border rounded px-2 py-1 text-sm bg-white">
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Zona</label>
+                        <select x-model="form.zona"
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                             <option value="">-- Seleziona --</option>
                             <option value="Bilaterale">Bilaterale</option>
                             <option value="Unilaterale Dx">Unilaterale Dx</option>
@@ -65,80 +74,98 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Istruzioni (opzionale)</label>
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Istruzioni
+                        (opzionale)</label>
                     <textarea x-model="form.istruzioni_fisio" rows="2"
-                        class="mt-1 w-full border rounded px-2 py-1 text-sm"></textarea>
+                        class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none resize-none"></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Video URL (opzionale)</label>
-                    <input type="url" x-model="form.video_url" class="mt-1 w-full border rounded px-2 py-1 text-sm"
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Video URL
+                        (opzionale)</label>
+                    <input type="url" x-model="form.video_url"
+                        class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
                         placeholder="https://...">
                 </div>
 
                 <div class="flex items-center gap-3 pt-2">
                     <button type="submit"
-                        class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition"
+                        class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transform hover:-translate-y-0.5"
                         :disabled="loading">
                         <span x-show="!loading">Aggiungi Esercizio</span>
                         <span x-show="loading">Salvataggio...</span>
                     </button>
-                    <span x-text="errorMessage" class="text-sm text-red-600"></span>
+                    <span x-text="errorMessage" class="text-sm text-red-600 font-medium"></span>
                 </div>
             </form>
         </div>
 
         <!-- LISTA ESERCIZI -->
-        <div class="bg-white rounded-xl shadow overflow-hidden">
-            <div class="px-4 py-3 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                <h2 class="font-semibold">Elenco Esercizi</h2>
-                <span class="text-xs text-gray-500" x-text="exercises.length + ' esercizi'"></span>
+        <div
+            class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-200/50">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <h2 class="font-bold text-slate-700">Elenco Esercizi</h2>
+                <span class="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded-lg border border-slate-200"
+                    x-text="exercises.length + ' esercizi'"></span>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full divide-y divide-slate-100">
+                    <thead class="bg-slate-50/50">
                         <tr>
                             <th scope="col"
-                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                                 Nome</th>
                             <th scope="col"
-                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                                 Area / Tipo</th>
                             <th scope="col"
-                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                                 Dettagli</th>
                             <th scope="col"
-                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
                                 Azioni</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="divide-y divide-slate-100">
                         <template x-if="exercises.length === 0">
                             <tr>
-                                <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500">Nessun esercizio
-                                    presente.</td>
+                                <td colspan="4" class="px-6 py-8 text-center text-sm text-slate-500">
+                                    Nessun esercizio presente.
+                                </td>
                             </tr>
                         </template>
                         <template x-for="ex in exercises" :key="ex.id">
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900" x-text="ex.name"></div>
-                                    <div class="text-xs text-gray-500" x-show="ex.video_url">
+                            <tr class="hover:bg-blue-50/30 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-slate-800" x-text="ex.name"></div>
+                                    <div class="text-xs text-blue-600 mt-1" x-show="ex.video_url">
                                         <a :href="ex.video_url" target="_blank"
-                                            class="text-blue-600 hover:underline">Video link</a>
+                                            class="hover:underline flex items-center gap-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path
+                                                    d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                                            </svg>
+                                            Video
+                                        </a>
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900" x-text="ex.area || '-'"></div>
-                                    <div class="text-xs text-gray-500" x-text="ex.tipo || '-'"></div>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-col gap-1">
+                                        <span
+                                            class="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded w-fit"
+                                            x-text="ex.area || '-'"></span>
+                                        <span class="text-xs text-slate-500" x-text="ex.tipo || '-'"></span>
+                                    </div>
                                 </td>
-                                <td class="px-4 py-3">
-                                    <div class="text-sm text-gray-900" x-text="ex.zona || '-'"></div>
-                                    <div class="text-xs text-gray-500 truncate max-w-xs"
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-slate-700" x-text="ex.zona || '-'"></div>
+                                    <div class="text-xs text-slate-500 truncate max-w-xs mt-0.5"
                                         x-text="ex.istruzioni_fisio || ''"></div>
                                 </td>
-                                <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                    <button @click="deleteExercise(ex.id)" class="text-red-600 hover:text-red-900 ml-2"
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button @click="deleteExercise(ex.id)"
+                                        class="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-colors"
                                         title="Elimina">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">

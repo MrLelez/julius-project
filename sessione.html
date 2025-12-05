@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <title>Dettaglio Sessione</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+    <div class="max-w-3xl mx-auto py-8 px-4" x-data="sessionDetailsApp()" x-init="init()">
+        <div class="mb-6">
+            <a href="index.html"
+                class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium transition-colors">← Torna
+                alla home</a>
+        </div>
+
+        <template x-if="loading">
+            <div class="text-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p class="text-slate-500 font-medium">Caricamento sessione...</p>
+            </div>
+        </template>
+
+        <template x-if="!loading && !session">
+            <div
+                class="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200/50">
+                <div class="text-4xl mb-3">😕</div>
+                <p class="text-slate-600 font-medium">Sessione non trovata.</p>
+            </div>
+        </template>
+
+        <div x-show="session" class="space-y-6">
+            <!-- HEADER SESSIONE -->
+            <div
+                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 p-6 border border-slate-200/50">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 capitalize"
+                            x-text="formatDate(session?.date)"></h1>
+                        <p class="text-slate-500 font-medium mt-1"
+                            x-text="'Ore ' + (session?.time?.slice(0,5) || '--:--')"></p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-blue-600 text-xs font-bold uppercase tracking-wide mb-1">Peso</p>
+                        <p class="text-lg font-bold text-slate-800"
+                            x-text="session?.weight ? session.weight + ' kg' : '-'"></p>
+                    </div>
+                    <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                        <p class="text-amber-600 text-xs font-bold uppercase tracking-wide mb-1">Energia</p>
+                        <div class="flex gap-0.5">
+                            <template x-for="i in 5">
+                                <span class="text-base"
+                                    :class="i <= session?.energy ? 'opacity-100' : 'opacity-20'">⚡</span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="bg-purple-50/50 p-4 rounded-xl border border-purple-100">
+                        <p class="text-purple-600 text-xs font-bold uppercase tracking-wide mb-1">Stress</p>
+                        <div class="flex gap-0.5">
+                            <template x-for="i in 5">
+                                <span class="text-base"
+                                    :class="i <= session?.stress ? 'opacity-100' : 'opacity-20'">😰</span>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6" x-show="session?.notes">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wide mb-2">Note Sessione</p>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-slate-700 italic text-sm leading-relaxed"
+                        x-text="session.notes"></div>
+                </div>
+            </div>
+
+            <!-- LISTA ESERCIZI -->
+            <div
+                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-200/50">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                    <h2 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></span>
+                        Esercizi Eseguiti
+                    </h2>
+                </div>
+
+                <template x-if="exercises.length === 0">
+                    <div class="p-12 text-center text-slate-500 text-sm">
+                        Nessun esercizio registrato in questa sessione.
+                    </div>
+                </template>
+
+                <ul class="divide-y divide-slate-100">
+                    <template x-for="ex in exercises" :key="ex.id">
+                        <li class="px-6 py-5 hover:bg-blue-50/30 transition-colors">
+                            <div class="flex justify-between items-start">
+                                <div class="w-full">
+                                    <h3 class="text-lg font-bold text-slate-800 mb-2" x-text="ex.exercise_name"></h3>
+                                    <div class="flex flex-wrap gap-2 text-xs font-medium mb-3">
+                                        <span
+                                            class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200"
+                                            x-text="ex.series + ' serie'"></span>
+                                        <span
+                                            class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200"
+                                            x-text="ex.reps + ' reps'"></span>
+                                        <span x-show="ex.load_kg"
+                                            class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200"
+                                            x-text="ex.load_kg + ' kg'"></span>
+
+                                        <span x-show="ex.stimulus !== null"
+                                            class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-100"
+                                            x-text="'Stim: ' + ex.stimulus"></span>
+                                        <span x-show="ex.fatigue !== null"
+                                            class="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-lg border border-orange-100"
+                                            x-text="'Fat: ' + ex.fatigue"></span>
+                                        <span x-show="ex.soreness !== null"
+                                            class="bg-red-50 text-red-700 px-2.5 py-1 rounded-lg border border-red-100"
+                                            x-text="'Dol: ' + ex.soreness"></span>
+                                    </div>
+                                    <p x-show="ex.notes"
+                                        class="text-sm text-slate-500 italic bg-slate-50 p-2 rounded-lg border border-slate-100 inline-block"
+                                        x-text="ex.notes">
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sessionDetailsApp() {
+            const supabaseUrl = 'https://thmaiwbweqyvbczdsxyn.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRobWFpd2J3ZXF5dmJjemRzeHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4Mzg1MjgsImV4cCI6MjA4MDQxNDUyOH0.WTSyb1XXGu7GKG9c9GeGKNtzFxuM33E6nCa2uSRfW9Y';
+            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+            return {
+                loading: true,
+                session: null,
+                exercises: [],
+
+                async init() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id');
+
+                    if (id) {
+                        await this.loadSession(id);
+                    } else {
+                        this.loading = false;
+                    }
+                },
+
+                async loadSession(id) {
+                    // 1. Fetch session details
+                    const { data: sessionData, error: sessionError } = await supabase
+                        .from('sessions')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (sessionError) {
+                        console.error('Error loading session:', sessionError);
+                    } else {
+                        this.session = sessionData;
+
+                        // 2. Fetch exercises for this session
+                        const { data: exercisesData, error: exercisesError } = await supabase
+                            .from('session_exercises')
+                            .select('*')
+                            .eq('session_id', id)
+                            .order('created_at', { ascending: true });
+
+                        if (exercisesError) {
+                            console.error('Error loading exercises:', exercisesError);
+                        } else {
+                            this.exercises = exercisesData || [];
+                        }
+                    }
+                    this.loading = false;
+                },
+
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    return new Date(dateStr).toLocaleDateString('it-IT', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

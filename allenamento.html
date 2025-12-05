@@ -10,56 +10,67 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 
-<body class="bg-slate-100 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
     <div class="max-w-3xl mx-auto py-8 px-4" x-data="app()" x-init="init()">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Nuovo allenamento</h1>
-            <a href="index.html" class="text-blue-600 hover:underline text-sm">← Torna alla home</a>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Nuovo allenamento</h1>
+            <a href="index.html"
+                class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium transition-colors">← Torna
+                alla home</a>
         </div>
 
         <!-- STEP 1: CREA SESSIONE -->
-        <div class="bg-white rounded-xl shadow p-4 mb-6" x-show="!sessionId">
-            <h2 class="font-semibold mb-2">1. Dettagli Sessione</h2>
-            <form @submit.prevent="createSession" class="space-y-3">
-                <div class="grid grid-cols-2 gap-3">
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 p-4 sm:p-6 mb-6 border border-slate-200/50"
+            x-show="!sessionId">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span class="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></span>
+                1. Dettagli Sessione
+            </h2>
+            <form @submit.prevent="createSession" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm">Data</label>
-                        <input type="date" x-model="form.date" class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Data</label>
+                        <input type="date" x-model="form.date"
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm">Ora</label>
-                        <input type="time" x-model="form.time" class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Ora</label>
+                        <input type="time" x-model="form.time"
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-sm">Peso (kg)</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Peso (kg)</label>
                         <input type="number" step="0.1" x-model="form.weight"
-                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm">Energia (1–5)</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Energia
+                            (1–5)</label>
                         <input type="number" min="1" max="5" x-model="form.energy"
-                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm">Stress (1–5)</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Stress (1–5)</label>
                         <input type="number" min="1" max="5" x-model="form.stress"
-                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm">Note</label>
-                    <textarea x-model="form.notes" class="mt-1 w-full border rounded px-2 py-1 text-sm"
+                    <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Note</label>
+                    <textarea x-model="form.notes"
+                        class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none resize-none"
                         rows="2"></textarea>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit"
+                        class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
                         :disabled="loading">
                         <span x-show="!loading">Inizia Sessione</span>
                         <span x-show="loading">Creazione...</span>
                     </button>
-                    <span x-text="errorMessage" class="text-sm text-red-600"></span>
+                    <span x-text="errorMessage" class="text-sm text-red-600 font-medium"></span>
                 </div>
             </form>
         </div>
@@ -68,75 +79,168 @@
         <div x-show="sessionId" class="space-y-6">
 
             <!-- INFO SESSIONE CORRENTE -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex justify-between items-center">
+            <div
+                class="bg-blue-50/80 backdrop-blur-sm border border-blue-200 rounded-2xl p-4 flex justify-between items-center shadow-sm">
                 <div>
-                    <p class="text-sm text-blue-800 font-semibold">Sessione in corso</p>
-                    <p class="text-xs text-blue-600" x-text="formatDateTime(form.date, form.time)"></p>
+                    <p class="text-sm text-blue-800 font-bold uppercase tracking-wide">Sessione in corso</p>
+                    <p class="text-xs text-blue-600 font-medium mt-0.5" x-text="formatDateTime(form.date, form.time)">
+                    </p>
                 </div>
                 <button @click="finishSession"
-                    class="text-sm bg-white border border-blue-300 text-blue-700 px-3 py-1 rounded hover:bg-blue-50">
+                    class="text-sm bg-white border border-blue-200 text-blue-700 px-4 py-2 rounded-xl font-semibold hover:bg-blue-50 hover:border-blue-300 transition-all shadow-sm">
                     Termina e torna alla home
                 </button>
             </div>
 
             <!-- FORM AGGIUNTA ESERCIZIO -->
-            <div class="bg-white rounded-xl shadow p-4">
-                <h2 class="font-semibold mb-3">2. Aggiungi Esercizio</h2>
-                <form @submit.prevent="addExerciseToSession" class="space-y-3">
+            <div
+                class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 p-4 sm:p-6 border border-slate-200/50">
+                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="w-1.5 h-5 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full"></span>
+                    2. Aggiungi Esercizio
+                </h2>
+                <form @submit.prevent="addExerciseToSession" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Esercizio</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Esercizio</label>
                         <div class="flex gap-2">
                             <select x-model="exerciseForm.exercise_name" required
-                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                                class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                                 <option value="">-- Seleziona esercizio --</option>
                                 <template x-for="ex in availableExercises" :key="ex.id">
                                     <option :value="ex.name" x-text="ex.name"></option>
                                 </template>
                             </select>
-                            <a href="esercizi.html" target="_blank"
-                                class="mt-1 px-3 py-1 bg-gray-100 text-gray-600 rounded border hover:bg-gray-200 text-sm flex items-center"
-                                title="Gestisci esercizi">
-                                +
-                            </a>
+                            <button type="button" @click="showNewExerciseForm = !showNewExerciseForm"
+                                class="px-4 py-2 bg-blue-100 text-blue-700 rounded-xl border border-blue-200 hover:bg-blue-200 text-sm font-semibold flex items-center whitespace-nowrap transition-colors"
+                                title="Nuovo esercizio">
+                                <span x-text="showNewExerciseForm ? 'Chiudi' : '+ Nuovo'"></span>
+                            </button>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Non trovi l'esercizio? <a href="esercizi.html"
-                                target="_blank" class="text-blue-600 underline">Aggiungilo qui</a> poi ricarica la
-                            pagina (o premi il tasto +).</p>
+
+                        <!-- FORM NUOVO ESERCIZIO INLINE -->
+                        <div x-show="showNewExerciseForm"
+                            class="mt-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 transform -translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0">
+                            <h3 class="text-sm font-bold text-blue-800 mb-3">Nuovo Esercizio Rapido</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                <input type="text" x-model="newExercise.name" placeholder="Nome esercizio *"
+                                    class="w-full border-2 border-blue-100 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                                <select x-model="newExercise.area"
+                                    class="w-full border-2 border-blue-100 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                                    <option value="">Area (opz)</option>
+                                    <option value="Gambe">Gambe</option>
+                                    <option value="Glutei">Glutei</option>
+                                    <option value="Petto">Petto</option>
+                                    <option value="Schiena">Schiena</option>
+                                    <option value="Spalle">Spalle</option>
+                                    <option value="Braccia">Braccia</option>
+                                    <option value="Addome">Addome</option>
+                                    <option value="Full Body">Full Body</option>
+                                </select>
+                                <select x-model="newExercise.tipo"
+                                    class="w-full border-2 border-blue-100 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                                    <option value="">Tipo (opz)</option>
+                                    <option value="Forza">Forza</option>
+                                    <option value="Ipertrofia">Ipertrofia</option>
+                                    <option value="Cardio">Cardio</option>
+                                    <option value="Mobilità">Mobilità</option>
+                                    <option value="Stretching">Stretching</option>
+                                    <option value="Riscaldamento">Riscaldamento</option>
+                                </select>
+                                <select x-model="newExercise.zona"
+                                    class="w-full border-2 border-blue-100 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
+                                    <option value="">Zona (opz)</option>
+                                    <option value="Bilaterale">Bilaterale</option>
+                                    <option value="Unilaterale Dx">Unilaterale Dx</option>
+                                    <option value="Unilaterale Sx">Unilaterale Sx</option>
+                                    <option value="Alternato">Alternato</option>
+                                </select>
+                            </div>
+                            <button type="button" @click="createExercise"
+                                class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
+                                Salva e Seleziona
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm">Serie</label>
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Serie</label>
                             <input type="number" x-model="exerciseForm.series"
-                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                                class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                         </div>
                         <div>
-                            <label class="block text-sm">Reps</label>
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Reps</label>
                             <input type="number" x-model="exerciseForm.reps"
-                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                                class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                         </div>
                         <div>
-                            <label class="block text-sm">Carico (kg)</label>
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Carico
+                                (kg)</label>
                             <input type="number" step="0.5" x-model="exerciseForm.load_kg"
-                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                                class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none">
                         </div>
+                    </div>
+
+                    <!-- SCALES 1-5 -->
+                    <div class="space-y-4 pt-2">
+                        <!-- Stimulus -->
                         <div>
-                            <label class="block text-sm">RPE (1-10)</label>
-                            <input type="number" min="1" max="10" x-model="exerciseForm.stimulus"
-                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Stimolo
+                                (0-5)</label>
+                            <div class="flex gap-2">
+                                <template x-for="i in 6" :key="i">
+                                    <button type="button" @click="exerciseForm.stimulus = (i-1)"
+                                        :class="exerciseForm.stimulus === (i-1) ? 'bg-blue-600 text-white shadow-md scale-110' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center"
+                                        x-text="i-1">
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                        <!-- Fatigue -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Fatica
+                                (0-5)</label>
+                            <div class="flex gap-2">
+                                <template x-for="i in 6" :key="i">
+                                    <button type="button" @click="exerciseForm.fatigue = (i-1)"
+                                        :class="exerciseForm.fatigue === (i-1) ? 'bg-orange-500 text-white shadow-md scale-110' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center"
+                                        x-text="i-1">
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                        <!-- Soreness -->
+                        <div>
+                            <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Dolore
+                                (0-5)</label>
+                            <div class="flex gap-2">
+                                <template x-for="i in 6" :key="i">
+                                    <button type="button" @click="exerciseForm.soreness = (i-1)"
+                                        :class="exerciseForm.soreness === (i-1) ? 'bg-red-500 text-white shadow-md scale-110' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center"
+                                        x-text="i-1">
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm">Note esercizio</label>
+                        <label class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Note
+                            esercizio</label>
                         <input type="text" x-model="exerciseForm.notes"
-                            class="mt-1 w-full border rounded px-2 py-1 text-sm"
+                            class="w-full border-2 border-slate-200 rounded-xl px-3 py-2 text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
                             placeholder="Es. esecuzione lenta, dolore spalla...">
                     </div>
 
-                    <div class="pt-2">
+                    <div class="pt-4">
                         <button type="submit"
-                            class="w-full bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700"
+                            class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transform hover:-translate-y-0.5"
                             :disabled="loading">
                             Aggiungi alla sessione
                         </button>
@@ -145,26 +249,45 @@
             </div>
 
             <!-- LISTA ESERCIZI SESSIONE -->
-            <div class="bg-white rounded-xl shadow overflow-hidden" x-show="sessionExercises.length > 0">
-                <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 class="font-semibold text-sm text-gray-700">Esercizi completati</h3>
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-200/50"
+                x-show="sessionExercises.length > 0">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                    <h3 class="font-bold text-slate-700">Esercizi completati</h3>
                 </div>
-                <ul class="divide-y divide-gray-200">
+                <ul class="divide-y divide-slate-100">
                     <template x-for="item in sessionExercises" :key="item.id">
-                        <li class="px-4 py-3">
+                        <li class="px-6 py-4 hover:bg-blue-50/30 transition-colors">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-900" x-text="item.exercise_name"></p>
-                                    <p class="text-xs text-gray-500">
-                                        <span x-text="item.series + ' x ' + item.reps"></span>
-                                        <span x-show="item.load_kg"> @ <span x-text="item.load_kg"></span>kg</span>
-                                        <span x-show="item.stimulus"> (RPE: <span x-text="item.stimulus"></span>)</span>
-                                    </p>
-                                    <p x-show="item.notes" class="text-xs text-gray-400 italic mt-1"
+                                    <p class="text-base font-bold text-slate-800" x-text="item.exercise_name"></p>
+                                    <div class="mt-2 flex flex-wrap gap-2 text-xs font-medium">
+                                        <span
+                                            class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg border border-slate-200"
+                                            x-text="item.series + ' x ' + item.reps"></span>
+                                        <span x-show="item.load_kg"
+                                            class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg border border-slate-200"
+                                            x-text="item.load_kg + ' kg'"></span>
+
+                                        <span x-show="item.stimulus !== null"
+                                            class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-100"
+                                            x-text="'Stim: ' + item.stimulus"></span>
+                                        <span x-show="item.fatigue !== null"
+                                            class="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-lg border border-orange-100"
+                                            x-text="'Fat: ' + item.fatigue"></span>
+                                        <span x-show="item.soreness !== null"
+                                            class="bg-red-50 text-red-700 px-2.5 py-1 rounded-lg border border-red-100"
+                                            x-text="'Dol: ' + item.soreness"></span>
+                                    </div>
+                                    <p x-show="item.notes" class="text-sm text-slate-500 italic mt-2"
                                         x-text="item.notes"></p>
                                 </div>
-                                <button @click="deleteSessionExercise(item.id)" class="text-red-400 hover:text-red-600">
-                                    <span class="text-xs">Rimuovi</span>
+                                <button @click="deleteSessionExercise(item.id)"
+                                    class="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
                                 </button>
                             </div>
                         </li>
@@ -203,8 +326,19 @@
                     series: 3,
                     reps: 10,
                     load_kg: '',
-                    stimulus: '', // RPE
+                    stimulus: null,
+                    fatigue: null,
+                    soreness: null,
                     notes: ''
+                },
+
+                // Inline creation state
+                showNewExerciseForm: false,
+                newExercise: {
+                    name: '',
+                    area: '',
+                    tipo: '',
+                    zona: ''
                 },
 
                 async init() {
@@ -215,6 +349,41 @@
 
                     // Carica esercizi disponibili
                     await this.loadAvailableExercises();
+
+                    // Check for active session
+                    const savedSessionId = localStorage.getItem('activeSessionId');
+                    if (savedSessionId) {
+                        await this.restoreSession(savedSessionId);
+                    }
+                },
+
+                async restoreSession(id) {
+                    this.loading = true;
+                    const { data, error } = await supabase
+                        .from('sessions')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (error || !data) {
+                        // Session not found or error (maybe deleted), clear storage
+                        console.warn('Saved session not found, clearing storage');
+                        localStorage.removeItem('activeSessionId');
+                    } else {
+                        // Restore session state
+                        this.sessionId = data.id;
+                        this.form = {
+                            date: data.date,
+                            time: data.time ? data.time.slice(0, 5) : '',
+                            weight: data.weight,
+                            energy: data.energy,
+                            stress: data.stress,
+                            notes: data.notes
+                        };
+                        await this.loadSessionExercises();
+                        console.log('Session restored:', this.sessionId);
+                    }
+                    this.loading = false;
                 },
 
                 async loadAvailableExercises() {
@@ -226,6 +395,39 @@
 
                     if (error) console.error('Error loading exercises:', error);
                     else this.availableExercises = data || [];
+                },
+
+                async createExercise() {
+                    if (!this.newExercise.name) {
+                        alert('Inserisci il nome dell\'esercizio');
+                        return;
+                    }
+
+                    this.loading = true;
+                    const { data, error } = await supabase
+                        .from('exercises')
+                        .insert([{
+                            name: this.newExercise.name,
+                            area: this.newExercise.area || null,
+                            tipo: this.newExercise.tipo || null,
+                            zona: this.newExercise.zona || null,
+                            attivo: true
+                        }])
+                        .select();
+
+                    if (error) {
+                        console.error('Error creating exercise:', error);
+                        alert('Errore creazione esercizio');
+                    } else {
+                        // Reload list and select new exercise
+                        await this.loadAvailableExercises();
+                        this.exerciseForm.exercise_name = this.newExercise.name;
+
+                        // Reset and hide form
+                        this.newExercise = { name: '', area: '', tipo: '', zona: '' };
+                        this.showNewExerciseForm = false;
+                    }
+                    this.loading = false;
                 },
 
                 async createSession() {
@@ -249,6 +451,7 @@
                         this.errorMessage = 'Errore creazione sessione: ' + error.message;
                     } else {
                         this.sessionId = data[0].id;
+                        localStorage.setItem('activeSessionId', this.sessionId);
                         console.log('Session created:', this.sessionId);
                     }
                     this.loading = false;
@@ -270,7 +473,9 @@
                             series: this.exerciseForm.series ? Number(this.exerciseForm.series) : null,
                             reps: this.exerciseForm.reps ? Number(this.exerciseForm.reps) : null,
                             load_kg: this.exerciseForm.load_kg ? Number(this.exerciseForm.load_kg) : null,
-                            stimulus: this.exerciseForm.stimulus ? Number(this.exerciseForm.stimulus) : null,
+                            stimulus: this.exerciseForm.stimulus,
+                            fatigue: this.exerciseForm.fatigue,
+                            soreness: this.exerciseForm.soreness,
                             notes: this.exerciseForm.notes || null
                         });
 
@@ -278,9 +483,12 @@
                         console.error('Error adding exercise:', error);
                         alert('Errore salvataggio esercizio');
                     } else {
-                        // Reset form parziale (mantieni serie/reps magari? no reset tutto per ora)
+                        // Reset form parziale
                         this.exerciseForm.exercise_name = '';
                         this.exerciseForm.load_kg = '';
+                        this.exerciseForm.stimulus = null;
+                        this.exerciseForm.fatigue = null;
+                        this.exerciseForm.soreness = null;
                         this.exerciseForm.notes = '';
                         // Ricarica lista
                         await this.loadSessionExercises();
@@ -311,6 +519,7 @@
                 },
 
                 finishSession() {
+                    localStorage.removeItem('activeSessionId');
                     window.location.href = 'index.html';
                 },
 
