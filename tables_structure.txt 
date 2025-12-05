@@ -1,0 +1,99 @@
+=========================
+TABLE: sessions
+=========================
+id               (uuid, pk, default gen_random_uuid())
+date             (date, not null)
+time             (time, not null)
+weight           (numeric(5,2), nullable)
+sleep_time       (numeric(4,1), nullable)
+energy           (int, nullable)           -- scala 1–5
+stress           (int, nullable)           -- scala 1–5
+umore            (int, nullable)           -- scala 1–5
+cycle_day        (int, nullable)
+cycle_phase      (text, nullable)          -- es: mestruazioni, follicolare, ovulatoria, luteale
+notes            (text, nullable)
+created_at       (timestamptz, default now())
+
+NOTE:
+Una riga = una sessione di allenamento + check-in del giorno.
+-----------------------------------------------
+
+
+
+=========================
+TABLE: session_exercises
+=========================
+id               (uuid, pk, default gen_random_uuid())
+session_id       (uuid, fk → sessions.id, on delete cascade)
+exercise_name    (text, not null)
+series           (int, nullable)
+reps             (int, nullable)
+load_kg          (numeric(6,2), nullable)
+stimulus         (int, nullable)           -- scala 0–5
+fatigue          (int, nullable)           -- scala 0–5
+soreness         (int, nullable)           -- dolore durante, 0–5
+soreness_after   (int, nullable)           -- dolore dopo, 0–5
+notes            (text, nullable)
+created_at       (timestamptz, default now())
+
+NOTE:
+Una riga = un esercizio eseguito nella sessione.
+-----------------------------------------------
+
+
+
+=========================
+TABLE: exercises
+=========================
+id               (uuid, pk, default gen_random_uuid())
+name             (text, not null)
+area             (text, nullable)          -- spalla / glutei / lombare ecc.
+tipo             (text, nullable)          -- forza / mobilità / stretching
+zona             (text, nullable)          -- dx / sx / bilaterale
+istruzioni_fisio (text, nullable)
+attivo           (boolean, default true)
+video_url        (text, nullable)
+created_at       (timestamptz, default now())
+
+NOTE:
+Catalogo esercizi usabile nei form.
+-----------------------------------------------
+
+
+
+=========================
+TABLE: symptoms
+=========================
+id               (uuid, pk, default gen_random_uuid())
+date             (date, not null)
+resting_soreness (int, nullable)           -- dolore a riposo 0–5
+stiffness        (int, nullable)           -- rigidità 0–5
+zone             (text, nullable)
+swelling         (boolean, nullable)
+notes            (text, nullable)
+created_at       (timestamptz, default now())
+
+NOTE:
+Monitor giornaliero indipendente dalle sessioni.
+-----------------------------------------------
+
+
+
+=========================
+TABLE: wellbeing       (opzionale)
+=========================
+id               (uuid, pk, default gen_random_uuid())
+date             (date, not null)
+weight           (numeric(5,2), nullable)
+sleep_time       (numeric(4,1), nullable)
+energy           (int, nullable)
+stress           (int, nullable)
+umore            (int, nullable)
+cycle_day        (int, nullable)
+cycle_phase      (text, nullable)
+notes            (text, nullable)
+created_at       (timestamptz, default now())
+
+NOTE:
+Se il check-in sta già in "sessions", questa tabella non è più necessaria.
+-----------------------------------------------

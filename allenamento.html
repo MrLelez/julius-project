@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <title>Nuovo allenamento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+    <div class="max-w-3xl mx-auto py-8 px-4" x-data="app()" x-init="init()">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Nuovo allenamento</h1>
+            <a href="index.html" class="text-blue-600 hover:underline text-sm">← Torna alla home</a>
+        </div>
+
+        <!-- STEP 1: CREA SESSIONE -->
+        <div class="bg-white rounded-xl shadow p-4 mb-6" x-show="!sessionId">
+            <h2 class="font-semibold mb-2">1. Dettagli Sessione</h2>
+            <form @submit.prevent="createSession" class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm">Data</label>
+                        <input type="date" x-model="form.date" class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm">Ora</label>
+                        <input type="time" x-model="form.time" class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-sm">Peso (kg)</label>
+                        <input type="number" step="0.1" x-model="form.weight"
+                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm">Energia (1–5)</label>
+                        <input type="number" min="1" max="5" x-model="form.energy"
+                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm">Stress (1–5)</label>
+                        <input type="number" min="1" max="5" x-model="form.stress"
+                            class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm">Note</label>
+                    <textarea x-model="form.notes" class="mt-1 w-full border rounded px-2 py-1 text-sm"
+                        rows="2"></textarea>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+                        :disabled="loading">
+                        <span x-show="!loading">Inizia Sessione</span>
+                        <span x-show="loading">Creazione...</span>
+                    </button>
+                    <span x-text="errorMessage" class="text-sm text-red-600"></span>
+                </div>
+            </form>
+        </div>
+
+        <!-- STEP 2: AGGIUNGI ESERCIZI (Visibile solo dopo aver creato la sessione) -->
+        <div x-show="sessionId" class="space-y-6">
+
+            <!-- INFO SESSIONE CORRENTE -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex justify-between items-center">
+                <div>
+                    <p class="text-sm text-blue-800 font-semibold">Sessione in corso</p>
+                    <p class="text-xs text-blue-600" x-text="formatDateTime(form.date, form.time)"></p>
+                </div>
+                <button @click="finishSession"
+                    class="text-sm bg-white border border-blue-300 text-blue-700 px-3 py-1 rounded hover:bg-blue-50">
+                    Termina e torna alla home
+                </button>
+            </div>
+
+            <!-- FORM AGGIUNTA ESERCIZIO -->
+            <div class="bg-white rounded-xl shadow p-4">
+                <h2 class="font-semibold mb-3">2. Aggiungi Esercizio</h2>
+                <form @submit.prevent="addExerciseToSession" class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Esercizio</label>
+                        <div class="flex gap-2">
+                            <select x-model="exerciseForm.exercise_name" required
+                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                                <option value="">-- Seleziona esercizio --</option>
+                                <template x-for="ex in availableExercises" :key="ex.id">
+                                    <option :value="ex.name" x-text="ex.name"></option>
+                                </template>
+                            </select>
+                            <a href="esercizi.html" target="_blank"
+                                class="mt-1 px-3 py-1 bg-gray-100 text-gray-600 rounded border hover:bg-gray-200 text-sm flex items-center"
+                                title="Gestisci esercizi">
+                                +
+                            </a>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Non trovi l'esercizio? <a href="esercizi.html"
+                                target="_blank" class="text-blue-600 underline">Aggiungilo qui</a> poi ricarica la
+                            pagina (o premi il tasto +).</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-sm">Serie</label>
+                            <input type="number" x-model="exerciseForm.series"
+                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm">Reps</label>
+                            <input type="number" x-model="exerciseForm.reps"
+                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm">Carico (kg)</label>
+                            <input type="number" step="0.5" x-model="exerciseForm.load_kg"
+                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm">RPE (1-10)</label>
+                            <input type="number" min="1" max="10" x-model="exerciseForm.stimulus"
+                                class="mt-1 w-full border rounded px-2 py-1 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm">Note esercizio</label>
+                        <input type="text" x-model="exerciseForm.notes"
+                            class="mt-1 w-full border rounded px-2 py-1 text-sm"
+                            placeholder="Es. esecuzione lenta, dolore spalla...">
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit"
+                            class="w-full bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700"
+                            :disabled="loading">
+                            Aggiungi alla sessione
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- LISTA ESERCIZI SESSIONE -->
+            <div class="bg-white rounded-xl shadow overflow-hidden" x-show="sessionExercises.length > 0">
+                <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <h3 class="font-semibold text-sm text-gray-700">Esercizi completati</h3>
+                </div>
+                <ul class="divide-y divide-gray-200">
+                    <template x-for="item in sessionExercises" :key="item.id">
+                        <li class="px-4 py-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900" x-text="item.exercise_name"></p>
+                                    <p class="text-xs text-gray-500">
+                                        <span x-text="item.series + ' x ' + item.reps"></span>
+                                        <span x-show="item.load_kg"> @ <span x-text="item.load_kg"></span>kg</span>
+                                        <span x-show="item.stimulus"> (RPE: <span x-text="item.stimulus"></span>)</span>
+                                    </p>
+                                    <p x-show="item.notes" class="text-xs text-gray-400 italic mt-1"
+                                        x-text="item.notes"></p>
+                                </div>
+                                <button @click="deleteSessionExercise(item.id)" class="text-red-400 hover:text-red-600">
+                                    <span class="text-xs">Rimuovi</span>
+                                </button>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function app() {
+            const supabaseUrl = 'https://thmaiwbweqyvbczdsxyn.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRobWFpd2J3ZXF5dmJjemRzeHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4Mzg1MjgsImV4cCI6MjA4MDQxNDUyOH0.WTSyb1XXGu7GKG9c9GeGKNtzFxuM33E6nCa2uSRfW9Y';
+            const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+            return {
+                loading: false,
+                errorMessage: '',
+                sessionId: null, // ID della sessione appena creata
+
+                // Dati form sessione
+                form: {
+                    date: '',
+                    time: '',
+                    weight: '',
+                    energy: 3,
+                    stress: 3,
+                    notes: ''
+                },
+
+                // Dati form esercizio
+                availableExercises: [],
+                sessionExercises: [],
+                exerciseForm: {
+                    exercise_name: '',
+                    series: 3,
+                    reps: 10,
+                    load_kg: '',
+                    stimulus: '', // RPE
+                    notes: ''
+                },
+
+                async init() {
+                    // Imposta data/ora default
+                    const now = new Date();
+                    this.form.date = now.toISOString().slice(0, 10);
+                    this.form.time = now.toTimeString().slice(0, 5);
+
+                    // Carica esercizi disponibili
+                    await this.loadAvailableExercises();
+                },
+
+                async loadAvailableExercises() {
+                    const { data, error } = await supabase
+                        .from('exercises')
+                        .select('id, name')
+                        .eq('attivo', true)
+                        .order('name');
+
+                    if (error) console.error('Error loading exercises:', error);
+                    else this.availableExercises = data || [];
+                },
+
+                async createSession() {
+                    this.loading = true;
+                    this.errorMessage = '';
+
+                    const { data, error } = await supabase
+                        .from('sessions')
+                        .insert({
+                            date: this.form.date,
+                            time: this.form.time,
+                            weight: this.form.weight ? Number(this.form.weight) : null,
+                            energy: this.form.energy ? Number(this.form.energy) : null,
+                            stress: this.form.stress ? Number(this.form.stress) : null,
+                            notes: this.form.notes || null,
+                        })
+                        .select();
+
+                    if (error) {
+                        console.error(error);
+                        this.errorMessage = 'Errore creazione sessione: ' + error.message;
+                    } else {
+                        this.sessionId = data[0].id;
+                        console.log('Session created:', this.sessionId);
+                    }
+                    this.loading = false;
+                },
+
+                async addExerciseToSession() {
+                    if (!this.sessionId) return;
+                    if (!this.exerciseForm.exercise_name) {
+                        alert('Seleziona un esercizio');
+                        return;
+                    }
+
+                    this.loading = true;
+                    const { error } = await supabase
+                        .from('session_exercises')
+                        .insert({
+                            session_id: this.sessionId,
+                            exercise_name: this.exerciseForm.exercise_name,
+                            series: this.exerciseForm.series ? Number(this.exerciseForm.series) : null,
+                            reps: this.exerciseForm.reps ? Number(this.exerciseForm.reps) : null,
+                            load_kg: this.exerciseForm.load_kg ? Number(this.exerciseForm.load_kg) : null,
+                            stimulus: this.exerciseForm.stimulus ? Number(this.exerciseForm.stimulus) : null,
+                            notes: this.exerciseForm.notes || null
+                        });
+
+                    if (error) {
+                        console.error('Error adding exercise:', error);
+                        alert('Errore salvataggio esercizio');
+                    } else {
+                        // Reset form parziale (mantieni serie/reps magari? no reset tutto per ora)
+                        this.exerciseForm.exercise_name = '';
+                        this.exerciseForm.load_kg = '';
+                        this.exerciseForm.notes = '';
+                        // Ricarica lista
+                        await this.loadSessionExercises();
+                    }
+                    this.loading = false;
+                },
+
+                async loadSessionExercises() {
+                    const { data, error } = await supabase
+                        .from('session_exercises')
+                        .select('*')
+                        .eq('session_id', this.sessionId)
+                        .order('created_at', { ascending: true });
+
+                    if (error) console.error(error);
+                    else this.sessionExercises = data || [];
+                },
+
+                async deleteSessionExercise(id) {
+                    if (!confirm('Rimuovere questo esercizio?')) return;
+                    const { error } = await supabase
+                        .from('session_exercises')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) console.error(error);
+                    else await this.loadSessionExercises();
+                },
+
+                finishSession() {
+                    window.location.href = 'index.html';
+                },
+
+                formatDateTime(dateStr, timeStr) {
+                    if (!dateStr) return '';
+                    const d = new Date(dateStr + 'T' + (timeStr || '00:00'));
+                    return d.toLocaleDateString('it-IT', { weekday: 'short', day: '2-digit', month: '2-digit' }) + (timeStr ? (' • ' + timeStr.slice(0, 5)) : '');
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>
